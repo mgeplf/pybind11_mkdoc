@@ -193,11 +193,13 @@ def process_comment(comment):
 
 
 def extract(filename, node, prefix, output):
+    print(filename, node, prefix, output, node.kind)
     if not (node.location.file is None or
             os.path.samefile(d(node.location.file.name), filename)):
         return 0
     if node.kind in RECURSE_LIST:
         sub_prefix = prefix
+        print('\t', sub_prefix)
         if node.kind not in PREFIX_BLACKLIST:
             if len(sub_prefix) > 0:
                 sub_prefix += '_'
@@ -270,6 +272,8 @@ def read_args(args):
         else:
             library_file = sorted(glob("/usr/lib/llvm-*/lib/libclang.so.1"), reverse=True)[0]
             cindex.Config.set_library_file(library_file)
+
+        print('lp: ', cindex.Config.library_path, 'lf: ', cindex.Config.library_file)
 
         # clang doesn't find its own base includes by default on Linux,
         # but different distros install them in different paths.
